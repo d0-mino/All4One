@@ -4,7 +4,12 @@
 <script>
 var url_1 = 'https://admin.greendaero.go.kr/home/adminNotice/adminNoticeList.do';
 
-fetch(url_1)
+fetch(url_1,{
+	Header: {
+		"Origin": "https://admin.greendaero.go.kr",
+		"Referer": "https://admin.greendaero.go.kr/adm/login/main.do"
+	}
+})
 .then(res => res.text())
 .then(html => {
 	const parser = new DOMParser();
@@ -14,7 +19,12 @@ fetch(url_1)
 
 	const url_2 = `https://admin.greendaero.go.kr/sys/code/administratorAccountDtid.do?optaUseId=${uName}`;
 	
-	return fetch(url_2);
+	return fetch(url_2,{
+		Header: {
+			"Origin": "https://admin.greendaero.go.kr",
+			"Referer": "https://admin.greendaero.go.kr/home/adminNotice/adminNoticeList.do"
+		}
+	});
 })
 .then(res => res.text())
 .then(html => {
@@ -39,7 +49,9 @@ fetch(url_1)
 		method: "POST",
 		body: E_body,
 		headers: {
-			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+			"Origin": "https://admin.greendaero.go.kr",
+			"Referer": "https://admin.greendaero.go.kr/sys/code/accountUpdate.do"
 		}
 	});
 }).then(response => console.log(response)
